@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f2">
+  <meta name="description" content="Share surplus food with your community and help every meal find a home.">
+  <title>AnnSetu — Food Donation &amp; Redistribution Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="AnnSetu home" data-page="dashboard">
+      <span class="brand-mark" aria-hidden="true">अ</span>
+      <span class="brand-name">AnnSetu<span class="brand-dot">.</span></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="nav">
+      <span class="menu-icon" aria-hidden="true"></span>
+      <span class="sr-only">Toggle navigation</span>
+    </button>
+    <nav id="nav" aria-label="Main navigation">
+      <button type="button" data-page="dashboard" class="active" aria-current="page">Overview</button>
+      <button type="button" data-page="donate">Share food</button>
+      <button type="button" data-page="donations">Donations</button>
+      <button type="button" data-page="food-guide">Food guide</button>
+      <button type="button" data-page="volunteers">Volunteers</button>
+      <button type="button" data-page="notifications">Updates <span id="alertCount" class="badge">0</span></button>
+    </nav>
+    <button class="header-cta page-link" type="button" data-page="donate">＋ Share a meal</button>
+  </header>
+
+  <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+
+  <main>
+    <section id="dashboard" class="page">
+      <div class="welcome">
+        <div class="welcome-copy">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> GOOD FOOD, GOOD NEIGHBORS</span>
+          <h1>Small acts.<br><span>Big impact.</span></h1>
+          <p>Make sure good food reaches the people who need it. Every meal shared makes our community a little stronger.</p>
+          <div class="welcome-actions">
+            <button type="button" class="button button-light page-link" data-page="donate">Share food <span aria-hidden="true">→</span></button>
+            <button type="button" class="button button-outline page-link" data-page="donations">Explore donations</button>
+            <button type="button" class="button button-guide page-link" data-page="food-guide">Food waste guide <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <div class="art-sun"></div>
+          <div class="art-plate"><span>🥗</span></div>
+          <div class="art-leaf leaf-one"></div>
+          <div class="art-leaf leaf-two"></div>
+          <div class="art-sparkle sparkle-one">✳</div>
+          <div class="art-sparkle sparkle-two">✳</div>
+          <div class="art-note"><span>♥</span> Goodness in every serving</div>
+        </div>
+        <div class="welcome-curve"></div>
+      </div>
+
+      <div class="section-heading dashboard-heading">
+        <div>
+          <span class="eyebrow">YOUR COMMUNITY AT A GLANCE</span>
+          <h2>Impact overview</h2>
+        </div>
+        <button type="button" class="text-button page-link" data-page="donations">View all donations <span aria-hidden="true">→</span></button>
+      </div>
+
+      <div class="stats">
+        <button type="button" class="stat stat-green page-link" data-page="donations">
+          <span class="stat-icon" aria-hidden="true">↗</span><span id="sTotal" class="stat-value">0</span><span class="stat-label">Total donations</span>
+        </button>
+        <button type="button" class="stat page-link" data-page="donations" data-status="Available">
+          <span class="stat-icon" aria-hidden="true">◷</span><span id="sAvailable" class="stat-value">0</span><span class="stat-label">Waiting for pickup</span>
+        </button>
+        <button type="button" class="stat page-link" data-page="donations" data-status="In progress">
+          <span class="stat-icon" aria-hidden="true">⌁</span><span id="sScheduled" class="stat-value">0</span><span class="stat-label">In progress</span>
+        </button>
+        <button type="button" class="stat page-link" data-page="donations" data-status="Delivered">
+          <span class="stat-icon" aria-hidden="true">✓</span><span id="sDelivered" class="stat-value">0</span><span class="stat-label">Delivered</span>
+        </button>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel impact-panel">
+          <div class="section-heading compact">
+            <div><span class="eyebrow">THE DIFFERENCE WE MAKE</span><h2>Meals with meaning</h2></div>
+            <span class="panel-icon" aria-hidden="true">♡</span>
+          </div>
+          <div class="meal-impact"><span id="sMeals">0</span><span>servings delivered to the community</span></div>
+          <div class="progress-label"><span>Donation journey</span><strong id="progressText" class="muted"></strong></div>
+          <div class="progress" role="progressbar" aria-label="Delivered donations" aria-valuemin="0" aria-valuemax="100">
+            <div id="progressBar"></div>
+          </div>
+          <div class="progress-foot"><span>Every contribution counts</span><span class="volunteer-count"><strong id="sVolunteers">0</strong> volunteers</span></div>
+        </section>
+        <section class="panel category-panel">
+          <div class="section-heading compact">
+            <div><span class="eyebrow">WHAT'S ON THE TABLE</span><h2>Food categories</h2></div>
+            <span class="panel-icon panel-icon-peach" aria-hidden="true">✳</span>
+          </div>
+          <div id="categoryBars"></div>
+        </section>
+      </div>
+
+      <section class="latest-section">
+        <div class="section-heading">
+          <div><span class="eyebrow">FRESHLY SHARED</span><h2>Latest donations</h2></div>
+          <button type="button" class="text-button page-link" data-page="donations">See everything <span aria-hidden="true">→</span></button>
+        </div>
+        <div id="latestList" class="latest-list"></div>
+      </section>
+
+      <section class="community-banner">
+        <div class="community-icon" aria-hidden="true">♡</div>
+        <div><h2>Have a little extra to share?</h2><p>Post a donation in just a few minutes. Someone nearby will be glad you did.</p></div>
+        <button type="button" class="button button-dark page-link" data-page="donate">Post a donation <span aria-hidden="true">→</span></button>
+      </section>
+    </section>
+
+    <section id="food-guide" class="page hidden">
+      <div class="page-intro">
+        <span class="eyebrow">A FRESHER FUTURE STARTS AT HOME</span>
+        <h1>Love your food.<br>Waste less of it.</h1>
+        <p>Small everyday habits can keep good food on the table and out of the bin.</p>
+      </div>
+      <section class="guide-feature">
+        <div class="guide-copy">
+          <span class="guide-kicker">A LITTLE CARE GOES A LONG WAY</span>
+          <h2>Make the most of every meal</h2>
+          <p>Food waste can feel like a big problem, but a few thoughtful choices make a real difference. Start with what you already have, and share what you cannot use in time.</p>
+          <button type="button" class="button button-dark page-link" data-page="donate">Share extra food <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="guide-image-wrap">
+          <svg class="food-illustration" viewBox="0 0 720 520" role="img" aria-labelledby="guideImageTitle guideImageDesc" xmlns="http://www.w3.org/2000/svg">
+            <title id="guideImageTitle">Save good food, compost the rest</title>
+            <desc id="guideImageDesc">Fresh vegetables and fruit beside a compost caddy in a warm, leafy kitchen scene.</desc>
+            <defs>
+              <linearGradient id="guideBg" x1="80" y1="30" x2="640" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#F3E8D3"/><stop offset="1" stop-color="#E4EDDE"/></linearGradient>
+              <linearGradient id="guideBin" x1="400" y1="260" x2="550" y2="460" gradientUnits="userSpaceOnUse"><stop stop-color="#78976C"/><stop offset="1" stop-color="#456A4B"/></linearGradient>
+            </defs>
+            <rect width="720" height="520" rx="32" fill="url(#guideBg)"/>
+            <circle cx="550" cy="112" r="77" fill="#F2D59E" opacity=".8"/>
+            <path d="M75 379c91-44 168-54 272-36 106 18 174 10 298-39v216H75V379Z" fill="#F8F3E8"/>
+            <path d="M95 386c140-38 205-32 302-17 72 12 153 8 241-23" stroke="#E8DDC7" stroke-width="3" stroke-linecap="round"/>
+            <g fill="#80996D">
+              <path d="M93 134c42 2 63 23 68 67-43-2-65-24-68-67Z"/>
+              <path d="M159 107c-4 37-24 56-63 58 3-39 24-59 63-58Z"/>
+              <path d="M599 184c38-3 59 16 66 54-39 3-61-16-66-54Z"/>
+              <path d="M650 158c-1 32-19 49-52 54 0-35 18-52 52-54Z"/>
+            </g>
+            <g stroke="#DCE6CD" stroke-width="3" stroke-linecap="round">
+              <path d="M112 137c16-16 29-34 40-55"/>
+              <path d="M616 210c12-14 21-29 28-47"/>
+            </g>
+            <g>
+              <path d="M151 371c-9-42 2-77 31-105l31 20c-18 25-22 52-13 85h-49Z" fill="#E9B950"/>
+              <path d="M160 358c-5-29 3-54 22-76" stroke="#F8D983" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="252" cy="300" r="49" fill="#DC6C4D"/>
+              <path d="M250 252c-3-15 3-25 16-31-1 14-7 24-16 31Z" fill="#648454"/>
+              <path d="M252 253c-14-10-25-9-37 1 14 5 27 5 37-1Z" fill="#78955E"/>
+              <path d="M252 254c9-15 22-17 37-9-11 12-24 15-37 9Z" fill="#597B4D"/>
+              <path d="M237 277c-4-29 6-51 31-67 13 27 4 50-31 67Z" fill="#759264"/>
+              <path d="M237 274c9-22 19-39 31-53M244 276c-8-20-17-35-29-47" stroke="#DDE8D0" stroke-width="3" stroke-linecap="round"/>
+              <path d="M288 372c15-42 40-62 76-57 3 36-21 61-72 74" fill="#819D6C"/>
+              <path d="M297 382c20-24 40-43 62-59" stroke="#DCE6CD" stroke-width="3" stroke-linecap="round"/>
+              <path d="M325 387c-7-36 6-59 36-70 13 31 3 56-31 76" fill="#A2B184"/>
+              <path d="M332 387c8-24 17-43 29-58" stroke="#ECF0DE" stroke-width="3" stroke-linecap="round"/>
+              <path d="M372 389c11-34 31-50 61-47 4 30-14 50-54 63" fill="#6F8F62"/>
+              <path d="M381 396c15-19 30-35 47-48" stroke="#DCE6CD" stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <g>
+              <path d="M405 270h145l-13 164a21 21 0 0 1-21 19h-77a21 21 0 0 1-21-19l-13-164Z" fill="url(#guideBin)"/>
+              <path d="M398 270h159v27H398v-27Z" fill="#66865D"/>
+              <path d="M411 266c4-17 19-28 38-28h52c20 0 34 11 38 28H411Z" fill="#A4B894"/>
+              <path d="M429 260c6-10 15-16 28-16h36c12 0 21 6 27 16" stroke="#D9E3CD" stroke-width="4" stroke-linecap="round"/>
+              <path d="M425 326h101M431 347h88" stroke="#A8BB9A" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+              <circle cx="478" cy="386" r="29" fill="#3E6246" opacity=".48"/>
+              <path d="M480 366c-2 16 7 26 23 29-2-16-9-26-23-29ZM476 367c-10 12-8 22 4 31 5-14 3-24-4-31Z" fill="#D0DBAA"/>
+              <path d="M477 367c-1 10 0 19 3 29" stroke="#EEF0D9" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+            <g fill="#FFF9EC">
+              <path d="m337 124 5 13 13 5-13 5-5 13-5-13-13-5 13-5 5-13Z"/>
+              <path d="m464 177 3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z"/>
+            </g>
+            <circle cx="326" cy="179" r="5" fill="#D39255"/>
+            <circle cx="575" cy="235" r="4" fill="#D39255"/>
+          </svg>
+          <span class="guide-image-note"><span aria-hidden="true">✳</span> Save good food. Compost the rest.</span>
+        </div>
+      </section>
+
+      <section class="guide-tips">
+        <div class="section-heading">
+          <div><span class="eyebrow">SIMPLE HABITS, REAL IMPACT</span><h2>Four ways to waste less</h2></div>
+        </div>
+        <div class="tips-grid">
+          <article class="tip-card">
+            <span class="tip-number">01</span><span class="tip-icon" aria-hidden="true">▤</span>
+            <h3>Plan before you shop</h3>
+            <p>Unplanned shopping often means forgotten ingredients and food that spoils before you get to it. A quick check before you shop helps you buy what your household can actually use.</p>
+            <ul class="tip-actions">
+              <li>Check your fridge, freezer, and pantry; note what needs using soon.</li>
+              <li>Plan a few meals, then make a list with realistic amounts.</li>
+              <li>Choose loose produce when possible, and skip bulk deals unless you can use or share the extra.</li>
+            </ul>
+            <p class="tip-takeaway"><strong>Try this:</strong> Before shopping, choose one ingredient you already have and plan a meal around it.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-number">02</span><span class="tip-icon tip-icon-peach" aria-hidden="true">◷</span>
+            <h3>Store food thoughtfully</h3>
+            <p>Food kept at the wrong temperature or left open can spoil sooner. Good storage protects freshness and makes it easier to remember what you already have.</p>
+            <ul class="tip-actions">
+              <li>Follow package storage directions; refrigerate or freeze perishables promptly.</li>
+              <li>Keep opened food covered or in clean, sealed containers, and label leftovers with the date.</li>
+              <li>Place older items where you can see them and use them before newer purchases.</li>
+            </ul>
+            <p class="tip-takeaway"><strong>Remember:</strong> “Use by” and “best before” can mean different things. Follow local label guidance, especially for food-safety dates.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-number">03</span><span class="tip-icon tip-icon-yellow" aria-hidden="true">↻</span>
+            <h3>Give leftovers a second life</h3>
+            <p>Extra portions do not have to become waste. Saving and planning leftovers can stretch your meals and reduce the amount of food that ends up in the bin.</p>
+            <ul class="tip-actions">
+              <li>Serve smaller portions first; people can always come back for more.</li>
+              <li>Refrigerate leftovers promptly in clean, shallow containers and eat them soon.</li>
+              <li>Freeze portions you will not use in time, label them, and reheat them thoroughly before eating.</li>
+            </ul>
+            <p class="tip-takeaway"><strong>Get creative:</strong> Add suitable leftover vegetables to soup, rice, pasta, or another meal.</p>
+          </article>
+          <article class="tip-card">
+            <span class="tip-number">04</span><span class="tip-icon tip-icon-pink" aria-hidden="true">♡</span>
+            <h3>Share what you can’t use</h3>
+            <p>If you have more safe, good-quality food than you need, sharing it can help a neighbor or community group while preventing avoidable waste.</p>
+            <ul class="tip-actions">
+              <li>Offer food early, while it is still fresh and there is time to arrange collection.</li>
+              <li>Keep it covered and at a safe temperature; include ingredients or allergen information when known.</li>
+              <li>Only share food that has been handled safely. If you are unsure it is safe, do not donate it.</li>
+            </ul>
+            <p class="tip-takeaway"><strong>Take action:</strong> Post a suitable surplus donation here so a local volunteer can arrange pickup.</p>
+          </article>
+        </div>
+        <section class="poster-gallery" aria-labelledby="posterGalleryTitle">
+          <div class="section-heading">
+            <div><span class="eyebrow">A PICTURE CAN SPARK A CHANGE</span><h2 id="posterGalleryTitle">Food waste awareness</h2></div>
+            <span class="poster-hint">Select a poster to view it larger</span>
+          </div>
+          <div class="poster-grid">
+            <figure class="poster-card">
+              <button class="poster-open" type="button" data-image="assets/food-guide/share-good-food.png" data-alt="Illustrated poster asking people to think who might need food before throwing it away." data-title="Before you throw, think who might need it." aria-label="View the Think who might need it poster larger">
+                <span class="poster-image-frame"><img src="assets/food-guide/share-good-food.png" alt="Before you throw, think who might need it. An illustration of food being shared." loading="lazy"><span class="poster-open-label">View poster <span aria-hidden="true">↗</span></span></span>
+              </button>
+              <figcaption><h3>Think before you throw</h3><p>Good food could make a difference to someone nearby.</p></figcaption>
+            </figure>
+            <figure class="poster-card">
+              <button class="poster-open" type="button" data-image="assets/food-guide/stop-food-waste.png" data-alt="Colorful Stop Food Waste poster encouraging people to share instead of waste food." data-title="Stop food waste. Share, don't waste." aria-label="View the Stop Food Waste poster larger">
+                <span class="poster-image-frame"><img src="assets/food-guide/stop-food-waste.png" alt="Stop food waste. Share, don't waste." loading="lazy"><span class="poster-open-label">View poster <span aria-hidden="true">↗</span></span></span>
+              </button>
+              <figcaption><h3>Share, don’t waste</h3><p>Pass on safe, extra food instead of letting it go to waste.</p></figcaption>
+            </figure>
+            <figure class="poster-card">
+              <button class="poster-open" type="button" data-image="assets/food-guide/save-leftovers.png" data-alt="A person throwing leftover salad into a waste bin." data-title="Small choices can reduce food waste." aria-label="View the save leftovers photo larger">
+                <span class="poster-image-frame"><img src="assets/food-guide/save-leftovers.png" alt="A plate of leftover salad being discarded." loading="lazy"><span class="poster-open-label">View photo <span aria-hidden="true">↗</span></span></span>
+              </button>
+              <figcaption><h3>Save what’s still good</h3><p>Store leftovers safely and enjoy them later.</p></figcaption>
+            </figure>
+            <figure class="poster-card">
+              <button class="poster-open" type="button" data-image="assets/food-guide/food-waste-reminder.png" data-alt="Simple turquoise Stop Food Waste graphic with a crossed-out food waste bin." data-title="Stop food waste." aria-label="View the Stop Food Waste reminder larger">
+                <span class="poster-image-frame"><img src="assets/food-guide/food-waste-reminder.png" alt="Stop Food Waste reminder graphic." loading="lazy"><span class="poster-open-label">View poster <span aria-hidden="true">↗</span></span></span>
+              </button>
+              <figcaption><h3>A daily reminder</h3><p>Small everyday habits add up to less waste.</p></figcaption>
+            </figure>
+            <figure class="poster-card">
+              <button class="poster-open" type="button" data-image="assets/food-guide/fight-food-waste.png" data-alt="Green Let's Fight Food Waste poster encouraging thoughtful purchasing, storing, and sharing." data-title="Let's fight food waste and enhance lives." aria-label="View the Fight Food Waste poster larger">
+                <span class="poster-image-frame"><img src="assets/food-guide/fight-food-waste.png" alt="Let's fight food waste. Reduce waste and enhance lives." loading="lazy"><span class="poster-open-label">View poster <span aria-hidden="true">↗</span></span></span>
+              </button>
+              <figcaption><h3>Let’s fight food waste</h3><p>Shop thoughtfully, store food well, and support sharing.</p></figcaption>
+            </figure>
+          </div>
+        </section>
+        <p class="guide-safety"><span aria-hidden="true">✓</span> Keep food safe: refrigerate perishable food promptly and follow local food-safety guidance when sharing.</p>
+      </section>
+    </section>
+
+    <section id="donate" class="page hidden">
+      <div class="page-intro"><span class="eyebrow">A LITTLE GOOD GOES A LONG WAY</span><h1 id="formTitle">Share a food donation</h1><p>Tell us what you have and when it can be picked up. We’ll help it find a good home.</p></div>
+      <form id="donationForm" class="form-panel" novalidate>
+        <input type="hidden" id="editId">
+        <div class="form-section-title"><span>01</span><div><h2>About you</h2><p>Who should volunteers contact?</p></div></div>
+        <div class="form-grid">
+          <div class="form-field"><label for="donorName">Donor name <span>*</span></label><input type="text" id="donorName" placeholder="e.g. Sharma Restaurant" autocomplete="organization"></div>
+          <div class="form-field"><label for="donorType">Donor type <span>*</span></label><select id="donorType"><option value="">Select type</option><option>Restaurant</option><option>Hotel</option><option>Event / Wedding</option><option>Hostel</option><option>Household</option></select></div>
+          <div class="form-field"><label for="phone">Phone number <span>*</span></label><input type="tel" id="phone" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric"></div>
+        </div>
+        <div class="form-section-title"><span>02</span><div><h2>About the food</h2><p>A few details help us get it to the right people.</p></div></div>
+        <div class="form-grid">
+          <div class="form-field"><label for="foodItem">Food item <span>*</span></label><input type="text" id="foodItem" placeholder="e.g. Rice and dal"></div>
+          <div class="form-field"><label for="category">Food category <span>*</span></label><select id="category"><option value="">Select category</option><option>Cooked meals</option><option>Bakery</option><option>Fruits and vegetables</option><option>Packaged food</option><option>Grains and groceries</option></select></div>
+          <div class="form-field"><label for="quantity">Quantity in servings <span>*</span></label><input type="number" id="quantity" min="1" placeholder="e.g. 40"></div>
+          <div class="form-field"><label for="pickupTime">Ready for pickup <span>*</span></label><input type="datetime-local" id="pickupTime"></div>
+          <div class="form-field form-field-wide"><label for="location">Pickup address <span>*</span></label><input type="text" id="location" placeholder="Street, area, city" autocomplete="street-address"></div>
+          <div class="form-field form-field-wide"><label for="notes">A helpful note <small>Optional</small></label><textarea id="notes" rows="3" placeholder="Veg / non-veg, packing, gate number..."></textarea></div>
+        </div>
+        <div class="form-footer"><p><span>*</span> Required fields</p><div class="row"><button type="button" id="cancelEdit" class="hidden">Cancel</button><button type="submit" class="button button-dark" id="saveBtn">Post donation <span aria-hidden="true">→</span></button></div></div>
+      </form>
+    </section>
+
+    <section id="donations" class="page hidden">
+      <div class="page-intro intro-row"><div><span class="eyebrow">GOOD FOOD, FINDING A HOME</span><h1>Community donations</h1><p>Browse available food and follow each donation from pickup to delivery.</p></div><button type="button" class="button button-dark page-link" data-page="donate">＋ Share food</button></div>
+      <section class="panel list-panel">
+        <div class="filters">
+          <label class="search-wrap"><span aria-hidden="true">⌕</span><input type="search" id="searchBox" placeholder="Search food, donor or location" aria-label="Search donations by food, donor, or location"></label>
+          <select id="filterCategory" aria-label="Filter by food category"><option value="">All categories</option></select>
+          <select id="filterStatus" aria-label="Filter by donation status"><option value="">All statuses</option><option>Available</option><option>In progress</option><option>Scheduled</option><option>Collected</option><option>Delivered</option><option>Cancelled</option></select>
+        </div>
+        <div id="donationList"></div>
+      </section>
+    </section>
+
+    <section id="volunteers" class="page hidden">
+      <div class="page-intro"><span class="eyebrow">THE PEOPLE BEHIND EVERY PICKUP</span><h1>Our volunteers</h1><p>Good neighbors make sure every donation reaches someone who needs it.</p></div>
+      <div class="volunteer-layout">
+        <div><div class="section-heading"><div><span class="eyebrow">COMMUNITY CHAMPIONS</span><h2>Registered volunteers</h2></div></div><div id="volunteerList"></div></div>
+        <div class="volunteer-form-wrap"><span class="eyebrow">JOIN THE GOOD</span><h2>Welcome aboard</h2><p class="form-intro">Sign up to help collect and deliver food in your area.</p>
+          <form id="volunteerForm" novalidate>
+            <div class="form-field"><label for="vName">Your name <span>*</span></label><input type="text" id="vName" autocomplete="name" placeholder="Full name"></div>
+            <div class="form-field"><label for="vPhone">Phone number <span>*</span></label><input type="tel" id="vPhone" placeholder="10-digit mobile number" autocomplete="tel" inputmode="numeric"></div>
+            <div class="form-field"><label for="vArea">Area covered <span>*</span></label><input type="text" id="vArea" placeholder="e.g. Model Town"></div>
+            <button type="submit" class="button button-dark">Add me as a volunteer <span aria-hidden="true">→</span></button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="notifications" class="page hidden">
+      <div class="page-intro intro-row"><div><span class="eyebrow">A LITTLE UPDATE FROM YOUR COMMUNITY</span><h1>Community updates</h1><p>Stay in the loop as donations get posted, picked up, and delivered.</p></div><button id="clearAlerts" class="button button-soft" type="button">Clear all</button></div>
+      <div id="alertList" class="alerts-list"></div>
+    </section>
+  </main>
+
+  <dialog id="posterDialog" class="poster-dialog" aria-labelledby="posterDialogTitle">
+    <div class="poster-dialog-content">
+      <button id="closePosterDialog" class="poster-dialog-close" type="button" aria-label="Close poster">×</button>
+      <h2 id="posterDialogTitle"></h2>
+      <img id="posterDialogImage" alt="">
+    </div>
+  </dialog>
+
+  <footer class="site-footer"><a class="brand" href="#" aria-label="AnnSetu home" data-page="dashboard"><span class="brand-mark" aria-hidden="true">अ</span><span class="brand-name">AnnSetu<span class="brand-dot">.</span></span></a><p>Good food deserves a good home. <span>Made for communities, with care.</span></p></footer>
+  <script src="script.js"></script>
+</body>
+</html>
